@@ -1,12 +1,25 @@
+import sys
+args = sys.argv[1:]
+
+if len(args) >= 1:
+    normalize = args[0] in ['True', 'true', 'T', 't']
+else:
+    normalize = np.random.choice([True, False])
+
+if len(args) >= 2:
+    hidden_layer_sizes = []
+    for arg in args[1:]:
+        hidden_layer_sizes.append(int(arg))
+else:
+    hidden_layer_sizes = np.random.randint(30, 100, np.random.randint(0, 5))
+
 import numpy as np
 from mnist import get_mnist
 from nnet import build_nnet
 import matplotlib.pylab as plt
 
-NORMALIZE = True
-
-hidden_layer_sizes = [50, 50] #np.random.randint(30, 100, np.random.randint(0, 5))
-eval_nnet, train_nnet = build_nnet(hidden_layer_sizes, normalize_layers=NORMALIZE)
+print 'normalize?', normalize
+eval_nnet, train_nnet = build_nnet(hidden_layer_sizes, normalize_layers=normalize)
 
 training_set, testing_set = get_mnist()
 
@@ -31,7 +44,7 @@ for i, (x, t) in enumerate(testing_set):
 print
 
 print 'network topology:', [784] + hidden_layer_sizes + [10]
-print 'normalized layer inputs:', NORMALIZE
+print 'normalized layer inputs:', normalize, type(normalize)
 print 'testing error:', error * 100. / len(testing_set), '%',
 
 plt.plot(errors)
